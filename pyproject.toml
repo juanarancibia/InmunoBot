@@ -9,7 +9,10 @@ readme = "README.md"
 requires-python = ">=3.10,<4.0"
 dependencies = [
     "langchain[openai] (>=0.3.20,<0.4.0)",
-    "langgraph (>=0.3.11,<0.4.0)"
+    "langgraph (>=0.3.11,<0.4.0)",
+    "jinja2 (>=3.1.6,<4.0.0)",
+    "streamlit (>=1.43.2,<2.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)"
 ]
 
 
@@ -20,3 +23,14 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.0"
 
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
