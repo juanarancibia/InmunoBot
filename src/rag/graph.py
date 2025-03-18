@@ -2,20 +2,34 @@ from typing import Dict
 
 from langgraph.graph import END, START, StateGraph
 
-from lib.llm import AkashModels, get_akash_model, remove_think_tokens
-from rag.prompt import RESPONSE_GENERATION_PROMPT
+from embeddings.main import get_passages
+from lib.llm import AkashModels, get_akash_chat_model, remove_think_tokens
+from rag.prompt import RESPONSE_GENERATION_PROMPT, TRANSLATE_QUESTION_PROMPT
 from rag.state import InputState, OutputState, OverallState
 
 
 def retrieve_passages(state: OverallState):
-    pass
+    question = state.get("messages", "")[-1].content
+    reasoner_model = get_akash_chat_model(AkashModels.DEEPSEEK_R1_14B, 0.6)
+
+    translated_question = remove_think_tokens(
+        reasoner_model.invoke(
+            TRANSLATE_QUESTION_PROMPT.format(question=question)
+        ).content
+    )
+
+    passages = get_passages(translated_question)
+
+    state["context"] = passages
+
+    return state
 
 
 def generate_response(state: OverallState) -> Dict[str, str]:
-    reasoner_model = get_akash_model(AkashModels.AKASH_DEEPSEEK_R1_32B, 0.6)
+    reasoner_model = get_akash_chat_model(AkashModels.DEEPSEEK_R1_32B, 0.6)
     user_message = state.get("messages", "")[-1]
     prompt = RESPONSE_GENERATION_PROMPT.format(
-        context="",
+        context=state.get("context", ""),
         previous_messages=state.get("messages", [""])[:-1],
         question=user_message.content
         if hasattr(user_message, "content")

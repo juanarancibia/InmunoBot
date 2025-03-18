@@ -19,3 +19,8 @@ QUESTION:
 CONTEXT:
 {context}
 """
+
+TRANSLATE_QUESTION_PROMPT = """
+Translate the following question to English:
+{question}
+"""
