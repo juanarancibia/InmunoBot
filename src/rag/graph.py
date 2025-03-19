@@ -1,10 +1,21 @@
 from typing import Dict
 
 from langgraph.graph import END, START, StateGraph
+from langgraph.graph.message import BaseMessage
 
 from embeddings.main import get_passages
-from lib.llm import AkashModels, get_akash_chat_model, remove_think_tokens
-from rag.prompt import RESPONSE_GENERATION_PROMPT, TRANSLATE_QUESTION_PROMPT
+from lib.llm import (
+    AkashModels,
+    get_akash_chat_model,
+    get_structured_output_with_retry,
+    remove_think_tokens,
+)
+from rag.models import DEFAULT_ANSWER, HallucinationDetector
+from rag.prompt import (
+    HALLUCINATION_DETECTOR_PROMPT,
+    RESPONSE_GENERATION_PROMPT,
+    TRANSLATE_QUESTION_PROMPT,
+)
 from rag.state import InputState, OutputState, OverallState
 
 
@@ -39,7 +50,22 @@ def generate_response(state: OverallState) -> Dict[str, str]:
     response = reasoner_model.invoke(prompt)
     response.content = remove_think_tokens(response.content)
 
-    return {"messages": [response]}
+    return {"response": response}
+
+
+def hallucination_detector(state: OverallState):
+    hallucination_detector = get_structured_output_with_retry(
+        HallucinationDetector,
+        HALLUCINATION_DETECTOR_PROMPT.format(
+            response=state.get("response", "").content,
+            documents=state.get("context", ""),
+        ),
+    )
+
+    if hallucination_detector.is_hallucination:
+        return {"messages": [BaseMessage(content=DEFAULT_ANSWER)]}
+
+    return {"messages": state.get("response", "")}
 
 
 def get_workflow():
@@ -47,10 +73,12 @@ def get_workflow():
 
     graph_builder.add_node("retrieve_passages", retrieve_passages)  # type: ignore
     graph_builder.add_node("generate_response", generate_response)  # type: ignore
+    graph_builder.add_node("hallucination_detector", hallucination_detector)  # type: ignore
 
     graph_builder.add_edge(START, "retrieve_passages")
     graph_builder.add_edge("retrieve_passages", "generate_response")
-    graph_builder.add_edge("generate_response", END)
+    graph_builder.add_edge("generate_response", "hallucination_detector")
+    graph_builder.add_edge("hallucination_detector", END)
 
     return graph_builder.compile()  # type: ignore
 

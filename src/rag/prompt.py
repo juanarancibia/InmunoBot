@@ -24,3 +24,18 @@ TRANSLATE_QUESTION_PROMPT = """
 Translate the following question to English:
 {question}
 """
+
+HALLUCINATION_DETECTOR_PROMPT = """
+INSTRUCTIONS:
+Assess the quality of the response based on the retrieved documents. 
+The response should only contain information from the retrieved documents.
+
+RESPONSE:
+{response}
+
+DOCUMENTS:
+{documents}
+
+RESULT:
+Is the response hallucinated? Yes/No
+"""

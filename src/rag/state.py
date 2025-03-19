@@ -19,3 +19,4 @@ class OverallState(InputState, OutputState):
     """Overall state for the RAG model."""
 
     context: str
+    response: AnyMessage
