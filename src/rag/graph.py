@@ -4,19 +4,19 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import BaseMessage
 
 from embeddings.main import get_passages
-from lib.llm import (
+from src.lib.llm import (
     AkashModels,
     get_akash_chat_model,
     get_structured_output_with_retry,
     remove_think_tokens,
 )
-from rag.models import DEFAULT_ANSWER, HallucinationDetector
-from rag.prompt import (
+from src.rag.models import DEFAULT_ANSWER, HallucinationDetector
+from src.rag.prompt import (
     HALLUCINATION_DETECTOR_PROMPT,
     RESPONSE_GENERATION_PROMPT,
     TRANSLATE_QUESTION_PROMPT,
 )
-from rag.state import InputState, OutputState, OverallState
+from src.rag.state import InputState, OutputState, OverallState
 
 
 def retrieve_passages(state: OverallState):

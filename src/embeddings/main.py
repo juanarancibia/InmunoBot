@@ -5,7 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
 from typing_extensions import List
 
-from lib.llm import AkashModels, get_akash_embedding_model
+from src.lib.llm import AkashModels, get_akash_embedding_model
 
 persist_directory = "knowledge_db"
 embedding_function = get_akash_embedding_model(AkashModels.BAAI_BGE_LARGE)
