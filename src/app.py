@@ -4,8 +4,8 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage, HumanMessage
 
-from src.lib.streamlit_callback import get_streamlit_cb
-from src.rag.graph import invoke_graph
+from .lib.streamlit_callback import get_streamlit_cb
+from .rag.graph import invoke_graph
 
 load_dotenv()
 
