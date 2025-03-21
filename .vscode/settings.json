@@ -1,3 +1,5 @@
 {
-    "python.analysis.typeCheckingMode": "strict"
+    "python.linting.enabled": false,
+    "python.languageServer": "Pylance",
+    "ruff.linting.enabled": true
 }

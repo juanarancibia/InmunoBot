@@ -3,37 +3,24 @@ from typing import Dict
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import BaseMessage
 
-from embeddings.main import get_passages
 from lib.llm import (
     AkashModels,
     get_akash_chat_model,
     get_structured_output_with_retry,
     remove_think_tokens,
 )
+from rag.context import retrieve_context
 from rag.models import DEFAULT_ANSWER, HallucinationDetector
-from rag.prompt import (
-    HALLUCINATION_DETECTOR_PROMPT,
-    RESPONSE_GENERATION_PROMPT,
-    TRANSLATE_QUESTION_PROMPT,
-)
+from rag.prompt import HALLUCINATION_DETECTOR_PROMPT, RESPONSE_GENERATION_PROMPT
 from rag.state import InputState, OutputState, OverallState
 
 
 def retrieve_passages(state: OverallState):
-    question = state.get("messages", "")[-1].content
-    reasoner_model = get_akash_chat_model(AkashModels.DEEPSEEK_R1_14B, 0.6)
+    user_message = state.get("messages", "")[-1].content
 
-    translated_question = remove_think_tokens(
-        reasoner_model.invoke(
-            TRANSLATE_QUESTION_PROMPT.format(question=question)
-        ).content
-    )
+    passages = retrieve_context(user_message)
 
-    passages = get_passages(translated_question)
-
-    state["context"] = passages
-
-    return state
+    return {"context": passages}
 
 
 def generate_response(state: OverallState) -> Dict[str, str]:
@@ -72,16 +59,16 @@ def hallucination_detector(state: OverallState):
 def get_workflow():
     graph_builder = StateGraph(OverallState, input=InputState, output=OutputState)
 
-    graph_builder.add_node("retrieve_passages", retrieve_passages)  # type: ignore
-    graph_builder.add_node("generate_response", generate_response)  # type: ignore
-    graph_builder.add_node("hallucination_detector", hallucination_detector)  # type: ignore
+    graph_builder.add_node("retrieve_passages", retrieve_passages)
+    graph_builder.add_node("generate_response", generate_response)
+    graph_builder.add_node("hallucination_detector", hallucination_detector)
 
     graph_builder.add_edge(START, "retrieve_passages")
     graph_builder.add_edge("retrieve_passages", "generate_response")
     graph_builder.add_edge("generate_response", "hallucination_detector")
     graph_builder.add_edge("hallucination_detector", END)
 
-    return graph_builder.compile()  # type: ignore
+    return graph_builder.compile()
 
 
 def invoke_graph(messages, callables):

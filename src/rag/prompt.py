@@ -20,9 +20,17 @@ CONTEXT:
 {context}
 """
 
-TRANSLATE_QUESTION_PROMPT = """
-Translate the following question to English:
-{question}
+TRANSLATE_USER_MESSAGE_PROMPT = """
+Translate the following user message to English:
+{user_message}
+
+Focus on improving the user message to make it more understandable and clear in English.
+The translation should be concise and accurate.
+
+RETURN FORMAT:
+- Only answer with the translated message.
+- Do not include any additional information.
+- The translation should be in English.
 """
 
 HALLUCINATION_DETECTOR_PROMPT = """
@@ -41,4 +49,49 @@ DOCUMENTS:
 
 RESULT:
 Is the response hallucinated? Yes/No
+"""
+
+
+QUERIES_GENERATOR_PROMPT = """
+**Objective**: Generate 5 diverse search queries tailored to retrieve information specifically from a document about biotechnology applications in veterinary vaccine development. The user's message is:
+
+----------------
+{user_message}
+----------------
+
+**Document Context**:
+The document focuses on various biotechnology techniques used in veterinary vaccine development, including but not limited to:
+- Reverse genetics
+- Recombinant vector technology (bacterial and viral vectors)
+- Gene-deleted vaccines
+- Chimeric viruses
+- Subunit vaccines
+
+**Instructions**:
+1. Create queries that:
+   - Focus on aspects of veterinary vaccine development discussed in the document context
+   - Include specific techniques (e.g., "reverse genetics vaccines")
+   - Use keywords related to animal diseases, vaccine types, or specific pathogens (if relevant to the user message)
+   - Explore the benefits, limitations, or applications of these biotechnologies.
+
+2. Format requirements:
+   - Numbered list (1-5)
+   - Each query should be concise (≤ 15 words).
+   - Use a mix of keyword phrases and question formats.
+   - The queries should be optimized for retrieving relevant passages from the document
+
+3. Examples of good queries (based on document context):
+   - "Reverse genetics applications in veterinary vaccines"
+   - "Advantages of gene-deleted vaccines for animals"
+   - "Chimeric virus vaccines for livestock diseases"
+   - "Recombinant vector technology in veterinary medicine"
+   - "Subunit vaccines vs live vaccines for veterinary use"
+
+**Output Format**:
+Generated Queries:
+1. [Query 1]
+2. [Query 2]
+3. [Query 3]
+4. [Query 4]
+5. [Query 5]
 """

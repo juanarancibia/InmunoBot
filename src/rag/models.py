@@ -7,6 +7,14 @@ class HallucinationDetector(BaseModel):
     )
 
 
+class QueryGenerator(BaseModel):
+    """Generate search queries for document retrieval"""
+
+    queries: list[str] = Field(
+        description="5 search queries to retrieve documents based on user message"
+    )
+
+
 DEFAULT_ANSWER = (
     "No tengo la respuesta para eso! \n\n"
     "Puedo responderte solamente sobre la bibliografía de Inmunología"
