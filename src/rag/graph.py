@@ -63,7 +63,8 @@ def hallucination_detector(state: OverallState):
     )
 
     if hallucination_detector.is_hallucination:
-        return {"messages": [BaseMessage(content=DEFAULT_ANSWER)]}
+        response_message = BaseMessage(content=str(DEFAULT_ANSWER), type="ai")
+        return {"messages": [response_message]}
 
     return {"messages": state.get("response", "")}
 

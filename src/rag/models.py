@@ -8,5 +8,6 @@ class HallucinationDetector(BaseModel):
 
 
 DEFAULT_ANSWER = (
-    "No tengo la respuesta para eso! \nPuedo responderte solamente sobre Inmunología"
+    "No tengo la respuesta para eso! \n\n"
+    "Puedo responderte solamente sobre la bibliografía de Inmunología"
 )

@@ -29,6 +29,9 @@ HALLUCINATION_DETECTOR_PROMPT = """
 INSTRUCTIONS:
 Assess the quality of the response based on the retrieved documents. 
 The response should only contain information from the retrieved documents.
+If the response contains information not present in the documents, mark it as a hallucination.
+If the response is hallucinated, return "is_hallucination: true" otherwise "is_hallucination: false".
+If the response is something like "No tengo la respuesta para eso", mark it as hallucinated.
 
 RESPONSE:
 {response}
