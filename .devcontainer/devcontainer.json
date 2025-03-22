@@ -17,7 +17,7 @@
       ]
     }
   },
-  "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; pip3 install poetry && poetry config virtualenvs.in-project true && poetry install; echo '✅ Packages installed and Requirements met'",
+  "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; pip3 install poetry && poetry config virtualenvs.in-project true && poetry install; wget https://www.sqlite.org/2023/sqlite-autoconf-3410200.tar.gz && tar -xvf sqlite-autoconf-3410200.tar.gz && cd sqlite-autoconf-3410200 && ./configure && make && sudo make install && sudo ldconfig && echo '✅ Packages installed and Requirements met'",
   "postAttachCommand": {
     "server": "poetry run streamlit run src/app.py --server.enableCORS false --server.enableXsrfProtection false"
   },
