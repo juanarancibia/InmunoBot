@@ -9,6 +9,8 @@ CONSIDERATIONS:
 - The answer should be in Spanish.
 - The answer should be formal.
 - Maintain conversation continuity based on PREVIOUS_MESSAGES.
+- Include a "Fuentes" section at the end of your response with the document names and page label numbers.
+- If the same document is used multiple times, include it only once in the "Fuentes" section detailing the different page label numbers.
 
 PREVIOUS_MESSAGES:
 {previous_messages}
@@ -18,6 +20,12 @@ QUESTION:
 
 CONTEXT:
 {context}
+
+RESPONSE FORMAT:
+Provide your answer followed by:
+
+Si quieres saber más puedes consultar las fuentes:
+- [metadata["source"].split('/')[-1].split('.')[0]] -> Página [metadata["page_label"]]
 """
 
 TRANSLATE_USER_MESSAGE_PROMPT = """
