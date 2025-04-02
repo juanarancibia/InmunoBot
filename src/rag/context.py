@@ -1,3 +1,5 @@
+import concurrent.futures
+
 from langgraph.graph.message import AnyMessage
 
 from embeddings.main import get_passages
@@ -18,7 +20,7 @@ def translate_user_message(user_message: AnyMessage):
     return translated_message
 
 
-def generate_queries(user_message: AnyMessage):
+def generate_queries(user_message: str):
     translated_message = translate_user_message(user_message)
 
     # Divide the message in n queries
@@ -58,7 +60,18 @@ def reciprocal_rank_fusion(results):
 
 
 def retrieve_and_rerank(queries: list[str]):
-    results = [get_passages(query) for query in queries]
+    # Use ThreadPoolExecutor to run queries in parallel
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Get passages for each query in parallel
+        query_results = list(executor.map(get_passages, queries))
+
+        # Flatten the list of lists into a single list
+        results = []
+        for query_result in query_results:
+            results.extend(query_result)
+
+    print(len(results))
+
     return reciprocal_rank_fusion(results)
 
 

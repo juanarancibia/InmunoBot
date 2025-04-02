@@ -9,8 +9,6 @@ CONSIDERATIONS:
 - The answer should be in Spanish.
 - The answer should be formal.
 - Maintain conversation continuity based on PREVIOUS_MESSAGES.
-- Include a "Fuentes" section at the end of your response with the document names and page label numbers.
-- If the same document is used multiple times, include it only once in the "Fuentes" section detailing the different page label numbers.
 
 PREVIOUS_MESSAGES:
 {previous_messages}
@@ -20,13 +18,8 @@ QUESTION:
 
 CONTEXT:
 {context}
-
-RESPONSE FORMAT:
-Provide your answer followed by:
-
-Si quieres saber más puedes consultar las fuentes:
-- [metadata["source"].split('/')[-1].split('.')[0]] -> Página [metadata["page_label"]]
 """
+
 
 TRANSLATE_USER_MESSAGE_PROMPT = """
 Translate the following user message to English:
@@ -46,8 +39,6 @@ INSTRUCTIONS:
 Assess the quality of the response based on the retrieved documents. 
 The response should only contain information from the retrieved documents.
 If the response contains information not present in the documents, mark it as a hallucination.
-If the response is hallucinated, return "is_hallucination: true" otherwise "is_hallucination: false".
-If the response is something like "No tengo la respuesta para eso", mark it as hallucinated.
 
 RESPONSE:
 {response}
@@ -58,8 +49,6 @@ DOCUMENTS:
 RESULT:
 Is the response hallucinated? Yes/No
 """
-
-
 QUERIES_GENERATOR_PROMPT = """
 **Objective**: Generate 5 diverse search queries tailored to retrieve information specifically from a document about biotechnology applications in veterinary vaccine development. The user's message is:
 
@@ -83,9 +72,8 @@ The document focuses on various biotechnology techniques used in veterinary vacc
    - Explore the benefits, limitations, or applications of these biotechnologies.
 
 2. Format requirements:
-   - Numbered list (1-5)
-   - Each query should be concise (≤ 15 words).
-   - Use a mix of keyword phrases and question formats.
+   - Each query should be concise (≤ 15 words)
+   - Use a mix of keyword phrases and question formats
    - The queries should be optimized for retrieving relevant passages from the document
 
 3. Examples of good queries (based on document context):
@@ -94,12 +82,4 @@ The document focuses on various biotechnology techniques used in veterinary vacc
    - "Chimeric virus vaccines for livestock diseases"
    - "Recombinant vector technology in veterinary medicine"
    - "Subunit vaccines vs live vaccines for veterinary use"
-
-**Output Format**:
-Generated Queries:
-1. [Query 1]
-2. [Query 2]
-3. [Query 3]
-4. [Query 4]
-5. [Query 5]
 """

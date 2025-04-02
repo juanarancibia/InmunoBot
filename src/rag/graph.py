@@ -25,10 +25,13 @@ def retrieve_passages(state: OverallState):
 
 def generate_response(state: OverallState) -> Dict[str, str]:
     reasoner_model = get_akash_chat_model(AkashModels.DEEPSEEK_R1_32B, 0.6)
-    user_message = state.get("messages", "")[-1]
+
+    messages = state.get("messages", [""])
+    user_message = messages[-1]
+    previous_messages = messages[-5:-1] if len(messages) >= 5 else messages[:-1]
     prompt = RESPONSE_GENERATION_PROMPT.format(
         context=state.get("context", ""),
-        previous_messages=state.get("messages", [""])[:-1],
+        previous_messages=previous_messages,
         question=user_message.content
         if hasattr(user_message, "content")
         else user_message,
