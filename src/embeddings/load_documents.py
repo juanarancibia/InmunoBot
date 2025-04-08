@@ -134,7 +134,8 @@ def split_markdown(md: str) -> list[Document]:
     # Split
     splits = text_splitter.split_documents(md_header_splits)
 
-    return splits
+    # Avoid splits with less than 100 characters
+    return [doc for doc in splits if len(doc.page_content.strip()) >= 100]
 
 
 def embed_pdfs(documents: list[Document]):

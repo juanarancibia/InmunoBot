@@ -36,17 +36,16 @@ def reciprocal_rank_fusion(results):
     fused_documents = {}
     k = 60
 
-    for docs in results:
-        for rank, doc in enumerate(docs):
-            doc_str = str(doc)
+    for rank, doc in enumerate(results):
+        doc_str = str(doc)
 
-            # If the document is not yet in the fused_documents dictionary,
-            # add it with an initial score of 0
-            if doc_str not in fused_documents:
-                fused_documents[doc_str] = 0
+        # If the document is not yet in the fused_documents dictionary,
+        # add it with an initial score of 0
+        if doc_str not in fused_documents:
+            fused_documents[doc_str] = 0
 
-            # Update the score of the document using the RRF formula: 1 / (rank + k)
-            fused_documents[doc_str] += 1 / (rank + k)
+        # Update the score of the document using the RRF formula: 1 / (rank + k)
+        fused_documents[doc_str] += 1 / (rank + k)
 
     # final reranked result
     reranked_results = [
@@ -69,8 +68,6 @@ def retrieve_and_rerank(queries: list[str]):
         results = []
         for query_result in query_results:
             results.extend(query_result)
-
-    print(len(results))
 
     return reciprocal_rank_fusion(results)
 

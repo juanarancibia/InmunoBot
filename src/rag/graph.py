@@ -24,7 +24,7 @@ def retrieve_passages(state: OverallState):
 
 
 def generate_response(state: OverallState) -> Dict[str, str]:
-    reasoner_model = get_akash_chat_model(AkashModels.DEEPSEEK_R1_32B, 0.6)
+    chat_model = get_akash_chat_model(AkashModels.LLAMA_4, 0.5)
 
     messages = state.get("messages", [""])
     user_message = messages[-1]
@@ -37,10 +37,9 @@ def generate_response(state: OverallState) -> Dict[str, str]:
         else user_message,
     )
 
-    response = reasoner_model.invoke(prompt)
-    response.content = remove_think_tokens(response.content)
+    response = chat_model.invoke(prompt)
 
-    return {"response": response}
+    return {"response": response.content}
 
 
 def hallucination_detector(state: OverallState):
