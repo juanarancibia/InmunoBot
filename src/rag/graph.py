@@ -39,7 +39,7 @@ def generate_response(state: OverallState) -> Dict[str, str]:
 
     response = chat_model.invoke(prompt)
 
-    return {"response": response.content}
+    return {"response": response}
 
 
 def hallucination_detector(state: OverallState):
