@@ -7,7 +7,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 class AkashModels(Enum):
     DEEPSEEK_R1_32B = "DeepSeek-R1-Distill-Qwen-32B"
     DEEPSEEK_R1_14B = "DeepSeek-R1-Distill-Qwen-14B"
-    LLAMA_4 = "meta-llama-Llama-4-Maverick-17B-128E-Instruct-FP8"
+    LLAMA_4 = "Meta-Llama-4-Maverick-17B-128E-Instruct-FP8"
     BAAI_BGE_LARGE = "BAAI-bge-large-en-v1-5"
 
 

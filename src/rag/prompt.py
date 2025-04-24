@@ -7,6 +7,8 @@ CONSIDERATIONS:
 - The answer should be in Spanish.
 - The answer should be formal.
 - Maintain conversation continuity based on PREVIOUS_MESSAGES.
+- Directly give the answer.
+- Do not mention "the context" directly. For example: the phrase "Según el contexto proporcionado" shouldnt be used. 
 
 PREVIOUS_MESSAGES:
 {previous_messages}

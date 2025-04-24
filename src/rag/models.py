@@ -13,7 +13,7 @@ class QueryGenerator(BaseModel):
     queries: list[str] = Field(
         default_factory=list,
         min_length=1,
-        max_length=5,
+        max_length=10,
         description="1 to 5 search queries to retrieve documents based on user message",
     )
 

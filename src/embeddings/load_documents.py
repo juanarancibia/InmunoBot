@@ -37,6 +37,7 @@ supabase_client: Client = create_client(SUPABASE_API_URL, SUPABASE_API_KEY)
 # Initialize the model
 # Refer to: https://huggingface.co/ds4sd/SmolDocling-256M-preview
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+print("Device: ", DEVICE)
 
 processor = AutoProcessor.from_pretrained("ds4sd/SmolDocling-256M-preview")
 
