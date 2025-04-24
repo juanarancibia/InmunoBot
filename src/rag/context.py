@@ -29,7 +29,7 @@ def generate_queries(user_message: str):
 
     queries = structured_output_model.invoke(translated_message).queries
 
-    return queries
+    return queries[:10]
 
 
 def reciprocal_rank_fusion(results):
