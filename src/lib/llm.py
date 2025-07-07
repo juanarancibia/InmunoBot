@@ -1,7 +1,9 @@
 import os
 from enum import Enum
 
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
+
+from lib.custom_embeddings import CustomAkashEmbeddings
 
 
 class AkashModels(Enum):
@@ -52,13 +54,20 @@ def get_structured_output_with_retry(
 
 def get_akash_embedding_model(model: AkashModels):
     """
-    Returns the Akash Embedding instance
+    Returns the Akash Embedding instance using custom implementation
+    to avoid tokenization issues
     """
-    return OpenAIEmbeddings(
-        model=model.value,
-        base_url="https://chatapi.akash.network/api/v1",
-        api_key=os.environ.get("AKASH_API_KEY", ""),
-    )
+    print(f"Initializing custom embedding model: {model.value}")
+
+    try:
+        # Use custom embedding implementation to avoid tokenization issues
+        embedding_model = CustomAkashEmbeddings(model=model.value)
+
+        return embedding_model
+
+    except Exception as e:
+        print(f"Error creating custom embedding model: {e}")
+        raise e
 
 
 def remove_think_tokens(result: str):

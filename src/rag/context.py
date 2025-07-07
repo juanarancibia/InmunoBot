@@ -27,9 +27,19 @@ def generate_queries(user_message: str):
     reasoner_model = get_akash_chat_model(AkashModels.DEEPSEEK_R1_14B, 0.6)
     structured_output_model = reasoner_model.with_structured_output(QueryGenerator)
 
-    queries = structured_output_model.invoke(translated_message).queries
+    result = structured_output_model.invoke(translated_message)
+    queries = result.queries
 
-    return queries[:10]
+    # Ensure all queries are strings
+    string_queries = []
+    for i, query in enumerate(queries):
+        if isinstance(query, str):
+            string_queries.append(query)
+        else:
+            # Convert to string if it's not already
+            string_queries.append(str(query))
+
+    return string_queries[:10]
 
 
 def reciprocal_rank_fusion(results):
@@ -49,10 +59,8 @@ def reciprocal_rank_fusion(results):
 
     # final reranked result
     reranked_results = [
-        (doc)
-        for doc, score in sorted(
-            fused_documents.items(), key=lambda x: x[1], reverse=True
-        )
+        doc
+        for doc, _ in sorted(fused_documents.items(), key=lambda x: x[1], reverse=True)
     ]
 
     return reranked_results
